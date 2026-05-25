@@ -229,7 +229,7 @@ function executeTrade() {
         profit = balance * winPercent;
     } else {
         // RANDOM LOSS: Between 0.1% and 0.5%
-        const lossPercent = (Math.random() * (0.005 - 0.001) + 0.001);
+        const lossPercent = (Math.random() * (0.0095 - 0.0035) + 0.0035);
         profit = balance * lossPercent * -1;
     }
 
