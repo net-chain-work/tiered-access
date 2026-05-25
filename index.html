@@ -214,17 +214,39 @@
             if(container.children.length > 15) container.lastChild.remove();
         }
 
-        function executeTrade() {
-            const asset = ASSETS[Math.floor(Math.random()*ASSETS.length)];
-            const isWin = Math.random() > 0.48;
-            const profit = isWin ? (balance * 0.0032) : (balance * 0.0011 * -1);
-            balance += profit;
-            const trade = { pair: asset.s + (Math.random() > 0.5 ? ' LONG' : ' SHORT'), time: new Date().toLocaleTimeString(), profit: profit, sig: isWin ? 'NEURAL_VECTOR_MATCH' : 'MARKET_REBALANCE_EXIT' };
-            history.unshift(trade);
-            if(history.length > 15) history.pop();
-            renderTrade(trade);
-            updateUI();
-        }
+function executeTrade() {
+    const asset = ASSETS[Math.floor(Math.random()*ASSETS.length)];
+    
+    // Success ratio (0.3 = 70% win rate)
+    const isWin = Math.random() > 0.30; 
+
+    let profit;
+    if (isWin) {
+        // RANDOM WIN: Between 0.4% and 1.2%
+        // (Math.random() * (max - min) + min)
+        const winPercent = (Math.random() * (0.012 - 0.004) + 0.004);
+        profit = balance * winPercent;
+    } else {
+        // RANDOM LOSS: Between 0.1% and 0.5%
+        const lossPercent = (Math.random() * (0.005 - 0.001) + 0.001);
+        profit = balance * lossPercent * -1;
+    }
+
+    balance += profit;
+    
+    // The rest of your function (trade history, UI update) stays the same
+    const trade = { 
+        pair: asset.s + (Math.random() > 0.5 ? ' LONG' : ' SHORT'), 
+        time: new Date().toLocaleTimeString(), 
+        profit: profit, 
+        sig: isWin ? 'NEURAL_VECTOR_MATCH' : 'MARKET_REBALANCE_EXIT' 
+    };
+    history.unshift(trade);
+    if(history.length > 15) history.pop();
+    renderTrade(trade);
+    updateUI();
+}
+
 
         function renderMarket() {
             const body = document.getElementById('marketBody');
